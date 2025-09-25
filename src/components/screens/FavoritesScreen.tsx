@@ -31,9 +31,6 @@ export function FavoritesScreen() {
     setFavoriteTips(getFavoriteTips());
   };
 
-  const handleBack = () => {
-    setCurrentScreen('tips');
-  };
 
   const handleExportPDF = async () => {
     if (favoriteTips.length > 0) {
@@ -60,7 +57,6 @@ export function FavoritesScreen() {
           <Link href="/wellness">
           <Button 
             variant="ghost" 
-            onClick={handleBack}
             className="mb-4 flex items-center gap-2 text-gray-600 dark:text-white/80 hover:text-blue-600 dark:hover:text-blue-300"
           >
               <ArrowLeft className="h-4 w-4" />
@@ -98,12 +94,13 @@ export function FavoritesScreen() {
               <CardDescription className="mb-4 text-gray-600 dark:text-white/70">
                 Start adding tips to your favorites to see them here
               </CardDescription>
-              <Button 
-                onClick={handleBack}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Browse Tips
-              </Button>
+              <Link href="/wellness">
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Browse Tips
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ) : (
@@ -122,7 +119,7 @@ export function FavoritesScreen() {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="text-3xl mb-2">{tip.icon}</div>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 items-center justify-center">
                         <Heart className="h-4 w-4 fill-current text-red-500" />
                         <Button
                           variant="ghost"
