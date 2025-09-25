@@ -1,26 +1,28 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { 
-  Sparkles, 
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Sparkles,
   Star,
   Target,
   Lightbulb,
   BookOpen,
-  Save
-} from 'lucide-react';
+  Save,
+} from "lucide-react";
 
 export function LandingPage() {
-  const [stars, setStars] = useState<Array<{
-    id: number;
-    left: number;
-    delay: number;
-    duration: number;
-    size: number;
-  }>>([]);
+  const [stars, setStars] = useState<
+    Array<{
+      id: number;
+      left: number;
+      delay: number;
+      duration: number;
+      size: number;
+    }>
+  >([]);
 
   useEffect(() => {
     const generateStars = () => {
@@ -48,13 +50,17 @@ export function LandingPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-black" />
 
       {/* Glow accents */}
-      <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
+      <div
+        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
                      w-[90vw] h-[45vw] sm:w-[80vw] sm:h-[40vw] lg:w-[70vw] lg:h-[35vw] xl:w-[1400px] xl:h-[700px]
-                     bg-blue-400/20 dark:bg-blue-500/30 rounded-t-full blur-[100px] sm:blur-[140px] lg:blur-[180px]" />
+                     bg-blue-400/20 dark:bg-blue-500/30 rounded-t-full blur-[100px] sm:blur-[140px] lg:blur-[180px]"
+      />
 
-      <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
+      <div
+        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
                      w-[60vw] h-[30vw] sm:w-[50vw] sm:h-[25vw] lg:w-[40vw] lg:h-[20vw] xl:w-[800px] xl:h-[400px]
-                     bg-blue-300/10 dark:bg-blue-400/20 rounded-t-full blur-[60px] sm:blur-[100px] lg:blur-[120px]" />
+                     bg-blue-300/10 dark:bg-blue-400/20 rounded-t-full blur-[60px] sm:blur-[100px] lg:blur-[120px]"
+      />
 
       {/* Stars */}
       {stars.map((star) => (
@@ -63,7 +69,7 @@ export function LandingPage() {
           className="absolute text-blue-400/60 dark:text-blue-200/60 animate-float-up"
           style={{
             left: `${star.left}px`,
-            bottom: '-20px',
+            bottom: "-20px",
             width: `${star.size}px`,
             height: `${star.size}px`,
             animationDuration: `${star.duration}s`,
@@ -83,7 +89,7 @@ export function LandingPage() {
               Wellness AI
             </span>
           </div>
-          
+
           <div className="flex items-center gap-2 sm:gap-4">
             <ThemeToggle />
             <Link href="/profile" className="cursor-pointer">
@@ -107,37 +113,48 @@ export function LandingPage() {
             <div className="text-gray-900 dark:text-white font-semibold text-lg sm:text-xl tracking-tight border-2 border-blue-200 dark:border-blue-400 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10">
               Wellness AI
             </div>
-            
+
             <h1 className="text-blue-600 dark:text-white font-medium text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight max-w-4xl">
               Your Personal
               <br />
-              <span className="text-blue-400 dark:text-blue-300">Wellness Journey</span>
+              <span className="text-blue-400 dark:text-blue-300">
+                Wellness Journey
+              </span>
               <br />
               Starts Here
             </h1>
-            
+
             <div className="text-gray-600 dark:text-white/80 font-normal text-base sm:text-lg leading-7 sm:leading-8 tracking-tight max-w-full sm:max-w-[850px] space-y-4 px-2 sm:px-0">
               <p>
-                Get personalized health recommendations powered by AI. Create your profile, receive 5 tailored wellness tips, 
-                and dive deep into step-by-step guidance designed just for you.
+                Get personalized health recommendations powered by AI. Create
+                your profile, receive 5 tailored wellness tips, and dive deep
+                into step-by-step guidance designed just for you.
               </p>
-              
+
               <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm">
                 <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full backdrop-blur-sm cursor-pointer hover:bg-blue-100 dark:bg-white/10 dark:hover:bg-white/20 transition-all">
                   <Target className="w-4 h-4 text-blue-600 dark:text-blue-300" />
-                  <span className="text-gray-800 dark:text-white">Personalized Goals</span>
+                  <span className="text-gray-800 dark:text-white">
+                    Personalized Goals
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full backdrop-blur-sm cursor-pointer hover:bg-yellow-100 dark:bg-white/10 dark:hover:bg-white/20 transition-all">
                   <Lightbulb className="w-4 h-4 text-yellow-600 dark:text-yellow-300" />
-                  <span className="text-gray-800 dark:text-white">AI-Generated Tips</span>
+                  <span className="text-gray-800 dark:text-white">
+                    AI-Generated Tips
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full backdrop-blur-sm cursor-pointer hover:bg-green-100 dark:bg-white/10 dark:hover:bg-white/20 transition-all">
                   <BookOpen className="w-4 h-4 text-green-600 dark:text-green-300" />
-                  <span className="text-gray-800 dark:text-white">Step-by-Step Guides</span>
+                  <span className="text-gray-800 dark:text-white">
+                    Step-by-Step Guides
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 bg-purple-50 px-4 py-2 rounded-full backdrop-blur-sm cursor-pointer hover:bg-purple-100 dark:bg-white/10 dark:hover:bg-white/20 transition-all">
                   <Save className="w-4 h-4 text-purple-600 dark:text-purple-300" />
-                  <span className="text-gray-800 dark:text-white">Save Favorites</span>
+                  <span className="text-gray-800 dark:text-white">
+                    Save Favorites
+                  </span>
                 </div>
               </div>
             </div>
@@ -146,7 +163,11 @@ export function LandingPage() {
           {/* CTA */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <Link href="/profile">
-              <Button variant="outline" size="lg" className="border-gray-300 text-gray-800 hover:bg-gray-100 hover:text-gray-900 dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-gray-300 text-gray-800 hover:bg-gray-100 hover:text-gray-900 dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black"
+              >
                 Start Your Journey
               </Button>
             </Link>

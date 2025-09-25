@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { UserProfile, WellnessTip, Screen } from '@/lib/types';
-import { getUserProfile, getFavoriteTips, getAllTips } from '@/lib/storage';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { UserProfile, WellnessTip, Screen } from "@/lib/types";
+import { getUserProfile, getFavoriteTips, getAllTips } from "@/lib/storage";
 
 interface AppContextType {
   currentScreen: Screen;
@@ -24,7 +24,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [currentScreen, setCurrentScreen] = useState<Screen>('tips');
+  const [currentScreen, setCurrentScreen] = useState<Screen>("tips");
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [wellnessTips, setWellnessTips] = useState<WellnessTip[]>([]);
   const [selectedTip, setSelectedTip] = useState<WellnessTip | null>(null);
@@ -35,11 +35,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const updateUserProfile = (newProfile: UserProfile | null) => {
     if (userProfile && newProfile) {
       // Check if this is a significant change
-      const significantChange = 
-        userProfile.age !== newProfile.age || 
+      const significantChange =
+        userProfile.age !== newProfile.age ||
         userProfile.gender !== newProfile.gender ||
-        JSON.stringify(userProfile.goals.sort()) !== JSON.stringify(newProfile.goals.sort());
-      
+        JSON.stringify(userProfile.goals.sort()) !==
+          JSON.stringify(newProfile.goals.sort());
+
       if (significantChange) {
         // Clear tips and favorites for fresh start
         setWellnessTips([]);
@@ -58,13 +59,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     if (!savedProfile) {
       // If no profile, redirect to profile page
-      router.push('/profile');
+      router.push("/profile");
       return;
     }
 
     updateUserProfile(savedProfile);
     setFavoriteTips(savedFavorites);
-    
+
     if (savedTips.length > 0) {
       setWellnessTips(savedTips);
     }
@@ -82,20 +83,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     favoriteTips,
     setFavoriteTips,
     isLoading,
-    setIsLoading
+    setIsLoading,
   };
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
 export function useAppContext() {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
 }

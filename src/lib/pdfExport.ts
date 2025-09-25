@@ -1,20 +1,23 @@
-import { WellnessTip, UserProfile } from './types';
+import { WellnessTip, UserProfile } from "./types";
 
 // Function to clean markdown text for PDF export
 const cleanMarkdownText = (text: string): string => {
   return text
-    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove **bold**
-    .replace(/\*(.*?)\*/g, '$1')     // Remove *italic*
-    .replace(/_{2}(.*?)_{2}/g, '$1') // Remove __bold__
-    .replace(/_(.*?)_/g, '$1')       // Remove _italic_
-    .replace(/`(.*?)`/g, '$1')       // Remove `code`
-    .replace(/#{1,6}\s*(.*)/g, '$1') // Remove # headers
-    .replace(/^\s*[-*+]\s*/gm, '')   // Remove bullet points
-    .replace(/^\s*\d+\.\s*/gm, '')   // Remove numbered lists
+    .replace(/\*\*(.*?)\*\*/g, "$1") // Remove **bold**
+    .replace(/\*(.*?)\*/g, "$1") // Remove *italic*
+    .replace(/_{2}(.*?)_{2}/g, "$1") // Remove __bold__
+    .replace(/_(.*?)_/g, "$1") // Remove _italic_
+    .replace(/`(.*?)`/g, "$1") // Remove `code`
+    .replace(/#{1,6}\s*(.*)/g, "$1") // Remove # headers
+    .replace(/^\s*[-*+]\s*/gm, "") // Remove bullet points
+    .replace(/^\s*\d+\.\s*/gm, "") // Remove numbered lists
     .trim();
 };
 
-export async function exportFavoritesToPDF(favorites: WellnessTip[], userProfile: UserProfile | null) {
+export async function exportFavoritesToPDF(
+  favorites: WellnessTip[],
+  userProfile: UserProfile | null
+) {
   try {
     // Create a simple HTML content for PDF generation
     const htmlContent = `
@@ -148,48 +151,73 @@ export async function exportFavoritesToPDF(favorites: WellnessTip[], userProfile
             <p>Personalized wellness tips for your journey</p>
           </div>
 
-          ${userProfile ? `
+          ${
+            userProfile
+              ? `
             <div class="profile-info">
               <h3>Profile Information</h3>
               <p><strong>Age:</strong> ${userProfile.age} years old</p>
               <p><strong>Gender:</strong> ${userProfile.gender}</p>
-              <p><strong>Goals:</strong> ${userProfile.goals.join(', ')}</p>
+              <p><strong>Goals:</strong> ${userProfile.goals.join(", ")}</p>
             </div>
-          ` : ''}
+          `
+              : ""
+          }
 
           <div class="tips-container">
-            ${favorites.map((tip, index) => `
+            ${favorites
+              .map(
+                (tip, index) => `
               <div class="tip">
                 <div class="tip-header">
                   <span class="tip-icon">${tip.icon}</span>
                   <h2 class="tip-title">${tip.title}</h2>
                 </div>
                 
-                <span class="tip-category">${tip.category.replace('-', ' ').split(' ').map((word: string) => 
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                ).join(' ')}</span>
+                <span class="tip-category">${tip.category
+                  .replace("-", " ")
+                  .split(" ")
+                  .map(
+                    (word: string) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}</span>
                 
                 <div class="tip-description">
                   ${cleanMarkdownText(tip.shortDescription)}
                 </div>
 
-                ${tip.longExplanation ? `
+                ${
+                  tip.longExplanation
+                    ? `
                   <div class="tip-explanation">
                     <h4>Why This Works:</h4>
                     <p>${cleanMarkdownText(tip.longExplanation)}</p>
                   </div>
-                ` : ''}
+                `
+                    : ""
+                }
 
-                ${tip.steps && tip.steps.length > 0 ? `
+                ${
+                  tip.steps && tip.steps.length > 0
+                    ? `
                   <div class="tip-steps step-item">
                     <h4>Step-by-Step Guide:</h4>
-                    ${tip.steps.map((step: string) => `
+                    ${tip.steps
+                      .map(
+                        (step: string) => `
                       <div class="step">${cleanMarkdownText(step)}</div>
-                    `).join('')}
+                    `
+                      )
+                      .join("")}
                   </div>
-                ` : ''}
+                `
+                    : ""
+                }
               </div>
-            `).join('')}
+            `
+              )
+              .join("")}
           </div>
 
           <div class="footer">
@@ -201,29 +229,31 @@ export async function exportFavoritesToPDF(favorites: WellnessTip[], userProfile
     `;
 
     // Create a new window and print as PDF
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(htmlContent);
       printWindow.document.close();
-      
+
       // Wait a bit for content to load, then trigger print
       setTimeout(() => {
         printWindow.print();
       }, 500);
     } else {
       // Fallback: create a blob and download
-      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const blob = new Blob([htmlContent], { type: "text/html" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `wellness-favorites-${new Date().toISOString().split('T')[0]}.html`;
+      a.download = `wellness-favorites-${
+        new Date().toISOString().split("T")[0]
+      }.html`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
   } catch (error) {
-    console.error('Failed to export PDF:', error);
-    alert('Failed to export PDF. Please try again.');
+    console.error("Failed to export PDF:", error);
+    alert("Failed to export PDF. Please try again.");
   }
 }

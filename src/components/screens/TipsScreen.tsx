@@ -1,35 +1,73 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { RefreshCw, Heart, User, Star, ArrowLeft, Sparkles, Copy, Check, Download, AlertTriangle } from 'lucide-react';
-import { useAppContext } from '@/components/AppContext';
-import { WellnessTip } from '@/lib/types';
-import { CATEGORY_COLORS } from '@/lib/types';
-import { saveAllTips, isFavorite, addToFavorites, removeFromFavorites, getFavoriteTips, saveFavoriteTips } from '@/lib/storage';
-import { exportFavoritesToPDF } from '@/lib/pdfExport';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
+  RefreshCw,
+  Heart,
+  User,
+  Star,
+  ArrowLeft,
+  Sparkles,
+  Copy,
+  Check,
+  Download,
+  AlertTriangle,
+} from "lucide-react";
+import { useAppContext } from "@/components/AppContext";
+import { WellnessTip } from "@/lib/types";
+import { CATEGORY_COLORS } from "@/lib/types";
+import {
+  saveAllTips,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
+  getFavoriteTips,
+  saveFavoriteTips,
+} from "@/lib/storage";
+import { exportFavoritesToPDF } from "@/lib/pdfExport";
 
 interface TipsScreenProps {
   onGenerateTips: () => Promise<WellnessTip[]>;
 }
 
 export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
-  const { 
-    wellnessTips, 
-    setWellnessTips, 
-    setSelectedTip, 
-    setCurrentScreen, 
+  const {
+    wellnessTips,
+    setWellnessTips,
+    setSelectedTip,
+    setCurrentScreen,
     userProfile,
     isLoading,
-    setIsLoading
+    setIsLoading,
   } = useAppContext();
 
   const [progress, setProgress] = useState(0);
@@ -40,17 +78,17 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
   // Update favorites when tips change
   useEffect(() => {
     const currentFavorites = getFavoriteTips();
-    setFavorites(currentFavorites.map(tip => tip.id));
-    
+    setFavorites(currentFavorites.map((tip) => tip.id));
+
     // Remove favorites for tips that no longer exist
     if (wellnessTips.length > 0) {
-      const currentTipIds = wellnessTips.map(tip => tip.id);
-      const updatedFavorites = currentFavorites.filter(fav => 
+      const currentTipIds = wellnessTips.map((tip) => tip.id);
+      const updatedFavorites = currentFavorites.filter((fav) =>
         currentTipIds.includes(fav.id)
       );
       if (updatedFavorites.length !== currentFavorites.length) {
         saveFavoriteTips(updatedFavorites);
-        setFavorites(updatedFavorites.map(tip => tip.id));
+        setFavorites(updatedFavorites.map((tip) => tip.id));
       }
     }
   }, [wellnessTips]);
@@ -63,22 +101,24 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
 
   const copyToClipboard = async (tip: WellnessTip) => {
     try {
-      const textToCopy = `${tip.title}\n\n${tip.shortDescription}\n\nCategory: ${tip.category.replace('-', ' ')}`;
+      const textToCopy = `${tip.title}\n\n${
+        tip.shortDescription
+      }\n\nCategory: ${tip.category.replace("-", " ")}`;
       await navigator.clipboard.writeText(textToCopy);
       setCopiedTipId(tip.id);
       setTimeout(() => setCopiedTipId(null), 2000);
     } catch (error) {
-      console.error('Failed to copy:', error);
+      console.error("Failed to copy:", error);
     }
   };
 
   const toggleFavorite = (tip: WellnessTip) => {
     if (favorites.includes(tip.id)) {
       removeFromFavorites(tip.id);
-      setFavorites(prev => prev.filter(id => id !== tip.id));
+      setFavorites((prev) => prev.filter((id) => id !== tip.id));
     } else {
       addToFavorites(tip);
-      setFavorites(prev => [...prev, tip.id]);
+      setFavorites((prev) => [...prev, tip.id]);
     }
   };
 
@@ -90,7 +130,7 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
 
     // Simulate progress
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 90) {
           clearInterval(progressInterval);
           return 90;
@@ -105,7 +145,7 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
       saveAllTips(tips);
       setProgress(100);
     } catch (error) {
-      console.error('Failed to generate tips:', error);
+      console.error("Failed to generate tips:", error);
     } finally {
       clearInterval(progressInterval);
       setTimeout(() => {
@@ -119,23 +159,24 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
     const cardElement = document.getElementById(`tip-card-${tip.id}`);
     if (cardElement) {
       // Add immediate feedback
-      cardElement.style.transform = 'scale(0.98)';
-      cardElement.style.transition = 'transform 0.1s ease-out';
-      
+      cardElement.style.transform = "scale(0.98)";
+      cardElement.style.transition = "transform 0.1s ease-out";
+
       // Wait a bit then do the fancy animation
       setTimeout(() => {
-        cardElement.style.transform = 'scale(1.02)';
-        cardElement.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        
+        cardElement.style.transform = "scale(1.02)";
+        cardElement.style.transition =
+          "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+
         setTimeout(() => {
           setSelectedTip(tip);
-          setCurrentScreen('detail');
+          setCurrentScreen("detail");
         }, 150);
       }, 100);
     } else {
       // Fallback if no element found
       setSelectedTip(tip);
-      setCurrentScreen('detail');
+      setCurrentScreen("detail");
     }
   };
 
@@ -179,15 +220,23 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                 Creating Your Personalized Tips ✨
               </CardTitle>
               <CardDescription className="text-base text-gray-600 dark:text-gray-400">
-                AI is analyzing your profile and generating custom recommendations...
+                AI is analyzing your profile and generating custom
+                recommendations...
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <Progress value={progress} className="w-full h-2 bg-blue-100 dark:bg-blue-900/30" />
+              <Progress
+                value={progress}
+                className="w-full h-2 bg-blue-100 dark:bg-blue-900/30"
+              />
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {progress < 30 && "Analyzing your wellness goals..."}
-                {progress >= 30 && progress < 60 && "Crafting personalized recommendations..."}
-                {progress >= 60 && progress < 90 && "Adding finishing touches..."}
+                {progress >= 30 &&
+                  progress < 60 &&
+                  "Crafting personalized recommendations..."}
+                {progress >= 60 &&
+                  progress < 90 &&
+                  "Adding finishing touches..."}
                 {progress >= 90 && "Almost ready!"}
               </p>
             </CardContent>
@@ -203,7 +252,7 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
       <div className="absolute inset-0">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/10 to-blue-600/10 dark:from-blue-500/20 dark:to-blue-700/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/8 to-blue-500/8 dark:from-blue-400/15 dark:to-blue-600/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        
+
         {/* Glow accent similar to landing */}
         <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-3/4 w-[80vw] h-[40vw] bg-blue-400/15 dark:bg-blue-500/25 rounded-t-full blur-[120px]" />
       </div>
@@ -211,7 +260,10 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
       {/* Header */}
       <header className="relative z-10 px-4 py-6">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2 cursor-pointer group">
+          <Link
+            href="/"
+            className="flex items-center space-x-2 cursor-pointer group"
+          >
             <div className="p-2 rounded-xl bg-blue-100 dark:bg-white/10 backdrop-blur-sm transition-transform group-hover:scale-105">
               <Sparkles className="h-6 w-6 text-blue-600 dark:text-white animate-gentle-pulse-alt" />
             </div>
@@ -222,7 +274,11 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link href="/profile">
-              <Button variant="ghost" size="sm" className="cursor-pointer border-gray-300 text-gray-800 hover:bg-blue-50 hover:text-blue-900 dark:border-white/20 dark:text-white dark:hover:bg-white/10 dark:hover:text-white transition-all duration-300 hover:scale-105">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="cursor-pointer border-gray-300 text-gray-800 hover:bg-blue-50 hover:text-blue-900 dark:border-white/20 dark:text-white dark:hover:bg-white/10 dark:hover:text-white transition-all duration-300 hover:scale-105"
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Edit Profile
               </Button>
@@ -243,10 +299,10 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
               </h1>
             </div>
             <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                size="default" 
-                onClick={() => setCurrentScreen('favorites')}
+              <Button
+                variant="outline"
+                size="default"
+                onClick={() => setCurrentScreen("favorites")}
                 className="flex items-center gap-2 cursor-pointer transition-all duration-300 hover:scale-105 border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/30 px-6 py-2"
               >
                 <Link href="/favorites" className="flex items-center gap-2">
@@ -254,37 +310,54 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                   Favorites
                 </Link>
               </Button>
-              <Button 
-                variant="outline" 
-                size="default" 
+              <Button
+                variant="outline"
+                size="default"
                 onClick={handleRegenerate}
                 className="flex items-center gap-2 cursor-pointer transition-all duration-300 hover:scale-105 border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/30 px-6 py-2"
                 disabled={isLoading}
               >
-                <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`h-5 w-5 ${isLoading ? "animate-spin" : ""}`}
+                />
                 Regenerate
               </Button>
             </div>
           </div>
-          
+
           {userProfile && (
             <Card className="p-6 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 border-blue-200 dark:border-blue-800 backdrop-blur-sm shadow-lg">
               <div className="flex flex-wrap items-center gap-4 text-sm">
-                <Badge variant="secondary" className="font-medium bg-white/70 dark:bg-gray-800/70 text-blue-800 dark:text-blue-200 px-3 py-1.5">
+                <Badge
+                  variant="secondary"
+                  className="font-medium bg-white/70 dark:bg-gray-800/70 text-blue-800 dark:text-blue-200 px-3 py-1.5"
+                >
                   {userProfile.age} years old
                 </Badge>
-                <Badge variant="secondary" className="font-medium bg-white/70 dark:bg-gray-800/70 text-blue-800 dark:text-blue-200 px-3 py-1.5">
+                <Badge
+                  variant="secondary"
+                  className="font-medium bg-white/70 dark:bg-gray-800/70 text-blue-800 dark:text-blue-200 px-3 py-1.5"
+                >
                   {userProfile.gender}
                 </Badge>
-                <span className="text-gray-700 dark:text-gray-300 font-medium text-base">Goals:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-medium text-base">
+                  Goals:
+                </span>
                 <div className="flex flex-wrap gap-2">
-                  {userProfile.goals.slice(0, 8).map(goal => (
-                    <Badge key={goal} variant="outline" className="text-sm border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-3 py-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/30">
+                  {userProfile.goals.slice(0, 8).map((goal) => (
+                    <Badge
+                      key={goal}
+                      variant="outline"
+                      className="text-sm border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-3 py-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                    >
                       {goal}
                     </Badge>
                   ))}
                   {userProfile.goals.length > 8 && (
-                    <Badge variant="outline" className="text-sm border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-3 py-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/30">
+                    <Badge
+                      variant="outline"
+                      className="text-sm border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-3 py-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                    >
                       +{userProfile.goals.length - 8} more
                     </Badge>
                   )}
@@ -298,8 +371,13 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
           <Card className="text-center max-w-md mx-auto shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-blue-200 dark:border-blue-800">
             <CardContent className="pt-8 pb-8">
               <Sparkles className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-4 animate-gentle-pulse-alt" />
-              <p className="text-gray-600 dark:text-gray-400 mb-4">No tips generated yet.</p>
-              <Button onClick={handleRegenerate} className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                No tips generated yet.
+              </p>
+              <Button
+                onClick={handleRegenerate}
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+              >
                 Generate Tips
               </Button>
             </CardContent>
@@ -315,19 +393,22 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
             >
               <CarouselContent className="-ml-4 md:-ml-6 py-8">
                 {wellnessTips.map((tip, index) => (
-                  <CarouselItem key={tip.id} className="pl-4 md:pl-6 basis-full sm:basis-1/2 xl:basis-1/3 2xl:basis-1/4">
+                  <CarouselItem
+                    key={tip.id}
+                    className="pl-4 md:pl-6 basis-full sm:basis-1/2 xl:basis-1/3 2xl:basis-1/4"
+                  >
                     <div className="p-2 h-full">
                       <Card
                         className="cursor-pointer transition-all duration-500 hover:shadow-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm group transform-gpu hover:-translate-y-3 hover:scale-[1.02] border-blue-200/50 dark:border-blue-800/50 relative overflow-hidden h-[320px] flex flex-col animate-fadeInScale active:scale-95"
                         onClick={() => handleTipClick(tip)}
                         id={`tip-card-${tip.id}`}
-                        style={{ 
-                          animationDelay: `${index * 120}ms`
+                        style={{
+                          animationDelay: `${index * 120}ms`,
                         }}
                       >
                         {/* Gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-blue-100/10 dark:from-blue-950/40 dark:to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                        
+
                         {/* Action buttons */}
                         <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-400 transform translate-y-3 group-hover:translate-y-0 z-10">
                           <button
@@ -350,12 +431,12 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                             }}
                             className="p-2 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-xl hover:scale-110 transition-transform duration-200 border border-blue-200/50 dark:border-blue-700/50"
                           >
-                            <Heart 
+                            <Heart
                               className={`h-4 w-4 transition-colors duration-200 ${
-                                favorites.includes(tip.id) 
-                                  ? 'text-red-500 fill-current' 
-                                  : 'text-gray-400 dark:text-gray-500'
-                              }`} 
+                                favorites.includes(tip.id)
+                                  ? "text-red-500 fill-current"
+                                  : "text-gray-400 dark:text-gray-500"
+                              }`}
                             />
                           </button>
                         </div>
@@ -376,12 +457,23 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                           </CardDescription>
                           <div className="mt-auto pt-2">
                             <Badge
-                              className={`text-xs transition-all duration-300 px-2 sm:px-3 py-1 ${CATEGORY_COLORS[tip.category as keyof typeof CATEGORY_COLORS] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'} group-hover:scale-105`}
+                              className={`text-xs transition-all duration-300 px-2 sm:px-3 py-1 ${
+                                CATEGORY_COLORS[
+                                  tip.category as keyof typeof CATEGORY_COLORS
+                                ] ||
+                                "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100"
+                              } group-hover:scale-105`}
                               variant="secondary"
                             >
-                              {tip.category.replace('-', ' ').split(' ').map(word => 
-                                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                              ).join(' ')}
+                              {tip.category
+                                .replace("-", " ")
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")}
                             </Badge>
                           </div>
                         </CardContent>
@@ -396,7 +488,7 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
           </div>
         )}
       </div>
-      
+
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent>
           <DialogHeader>
@@ -405,7 +497,8 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
               Regenerate Tips
             </DialogTitle>
             <DialogDescription>
-              Regenerating tips will clear your current favorites. Do you want to continue?
+              Regenerating tips will clear your current favorites. Do you want
+              to continue?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">

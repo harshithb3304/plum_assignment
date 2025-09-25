@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "WellnessAI - Your Personal Wellness Journey",
-  description: "Discover personalized wellness recommendations tailored to your unique goals with AI-powered insights.",
+  description:
+    "Discover personalized wellness recommendations tailored to your unique goals with AI-powered insights.",
 };
 
 export default function RootLayout({
