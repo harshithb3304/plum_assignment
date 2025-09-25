@@ -131,23 +131,23 @@ export function DetailScreen({ onGenerateDetails }: DetailScreenProps) {
 
         <Card className="shadow-2xl bg-white/90 dark:bg-gray-900/90 border-blue-200 dark:border-blue-800/50 overflow-hidden">
           <CardHeader className="p-0 m-0 border-b border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20">
-            <div className="flex items-start justify-between p-6">
-              <div className="flex items-center gap-6">
-                <div className="text-6xl transform transition-transform duration-300 hover:scale-110 hover:rotate-12 cursor-pointer">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between p-4 sm:p-6 gap-4 lg:gap-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1">
+                <div className="text-4xl sm:text-5xl lg:text-6xl transform transition-transform duration-300 hover:scale-110 hover:rotate-12 cursor-pointer flex-shrink-0">
                   {selectedTip.icon}
                 </div>
-                <div className="flex-1">
-                  <CardTitle className="text-3xl text-gray-900 dark:text-white font-bold">
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-xl sm:text-2xl lg:text-3xl text-gray-900 dark:text-white font-bold mb-2 leading-tight">
                     {selectedTip.title}
                   </CardTitle>
-                  <CardDescription className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <CardDescription className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                     {selectedTip.shortDescription}
                   </CardDescription>
                 </div>
               </div>
-              <div className="flex items-center gap-3 flex-col sm:flex-row">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:flex-col lg:items-end">
                 <Badge 
-                  className={`text-sm px-4 py-2 ${CATEGORY_COLORS[selectedTip.category as keyof typeof CATEGORY_COLORS] || 'bg-gray-100 text-gray-800'} transition-all duration-300 hover:scale-105 cursor-pointer`}
+                  className={`text-xs sm:text-sm px-3 sm:px-4 py-2 ${CATEGORY_COLORS[selectedTip.category as keyof typeof CATEGORY_COLORS] || 'bg-gray-100 text-gray-800'} transition-all duration-300 hover:scale-105 cursor-pointer text-center`}
                   variant="secondary"
                 >
                   {selectedTip.category.replace('-', ' ').split(' ').map(word => 
@@ -158,10 +158,15 @@ export function DetailScreen({ onGenerateDetails }: DetailScreenProps) {
                   variant={isFavorite(selectedTip.id) ? "default" : "outline"}
                   size="default"
                   onClick={handleToggleFavorite}
-                  className="flex items-center gap-2 cursor-pointer transition-all duration-300 hover:scale-105 px-6 py-2"
+                  className="flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 hover:scale-105 px-4 sm:px-6 py-2 text-sm sm:text-base"
                 >
                   <Heart className={`h-4 w-4 ${isFavorite(selectedTip.id) ? 'fill-current' : ''}`} />
-                  {isFavorite(selectedTip.id) ? 'Favorited' : 'Add to Favorites'}
+                  <span className="hidden sm:inline">
+                    {isFavorite(selectedTip.id) ? 'Favorited' : 'Add to Favorites'}
+                  </span>
+                  <span className="sm:hidden">
+                    {isFavorite(selectedTip.id) ? 'Favorited' : 'Add'}
+                  </span>
                 </Button>
               </div>
             </div>

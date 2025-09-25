@@ -360,23 +360,23 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                           </button>
                         </div>
 
-                        <CardHeader className="pb-4 relative flex-shrink-0">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="text-5xl transition-all duration-500 group-hover:scale-125 group-hover:-rotate-12 transform-gpu will-change-transform">
+                        <CardHeader className="pb-2 sm:pb-4 relative flex-shrink-0 px-3 sm:px-6 pt-3 sm:pt-6">
+                          <div className="flex items-start justify-between mb-2 sm:mb-4">
+                            <div className="text-3xl sm:text-4xl lg:text-5xl transition-all duration-500 group-hover:scale-125 group-hover:-rotate-12 transform-gpu will-change-transform">
                               {tip.icon}
                             </div>
                           </div>
-                          <CardTitle className="text-xl font-bold line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight">
+                          <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight">
                             {tip.title}
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="relative flex-1 flex flex-col">
-                          <CardDescription className="mb-4 line-clamp-4 leading-relaxed text-gray-600 dark:text-gray-300 flex-1 text-sm">
+                        <CardContent className="relative flex-1 flex flex-col px-3 sm:px-6 pb-3 sm:pb-6">
+                          <CardDescription className="mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-4 leading-relaxed text-gray-600 dark:text-gray-300 flex-1 text-xs sm:text-sm">
                             {tip.shortDescription}
                           </CardDescription>
                           <div className="mt-auto pt-2">
                             <Badge
-                              className={`text-xs transition-all duration-300 px-3 py-1 ${CATEGORY_COLORS[tip.category as keyof typeof CATEGORY_COLORS] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'} group-hover:scale-105`}
+                              className={`text-xs transition-all duration-300 px-2 sm:px-3 py-1 ${CATEGORY_COLORS[tip.category as keyof typeof CATEGORY_COLORS] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'} group-hover:scale-105`}
                               variant="secondary"
                             >
                               {tip.category.replace('-', ' ').split(' ').map(word => 
@@ -390,8 +390,8 @@ export function TipsScreen({ onGenerateTips }: TipsScreenProps) {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="hidden lg:flex -left-16 bg-white/95 dark:bg-gray-800/95 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/50 shadow-xl w-12 h-12" />
-              <CarouselNext className="hidden lg:flex -right-16 bg-white/95 dark:bg-gray-800/95 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/50 shadow-xl w-12 h-12" />
+              <CarouselPrevious className="flex -left-8 lg:-left-20 bg-white/95 dark:bg-gray-800/95 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/50 shadow-xl w-10 h-10 lg:w-12 lg:h-12" />
+              <CarouselNext className="flex -right-8 lg:-right-20 bg-white/95 dark:bg-gray-800/95 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/50 shadow-xl w-10 h-10 lg:w-12 lg:h-12" />
             </Carousel>
           </div>
         )}
