@@ -22,7 +22,7 @@ export interface WellnessTip {
 export async function generateWellnessTips(
   profile: UserProfile
 ): Promise<WellnessTip[]> {
-  let modelsToTry = ["gemini-1.5-flash", "gemini-1.5", "gemini-1.0"];
+  let modelsToTry = ["gemini-2.5-flash","gemini-2.0-flash-lite","gemini-1.5-flash"];
 
   // Try to list available models and filter the candidates to avoid 404s
   try {
